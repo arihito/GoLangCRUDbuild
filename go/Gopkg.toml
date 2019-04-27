@@ -1,0 +1,15 @@
+[prune]
+  go-tests = true
+  unused-packages = true
+
+[[constraint]]
+  name = "github.com/jinzhu/gorm"
+  version = "1.9.4"
+
+[[constraint]]
+  name = "github.com/labstack/echo"
+  version = "3.3.10"
+
+[[constraint]]
+  name = "github.com/labstack/gommon"
+  version = "0.2.8"

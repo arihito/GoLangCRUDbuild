@@ -1,0 +1,8 @@
+# IDE
+.idea
+
+# dependencies
+go/vendor
+
+# data
+mysql/data

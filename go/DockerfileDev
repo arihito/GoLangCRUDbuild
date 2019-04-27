@@ -1,0 +1,8 @@
+FROM golang:1.11.9
+
+RUN apt-get update -qq && \
+    apt-get install -y mysql-client
+
+RUN go get -u github.com/tockins/realize
+
+CMD ["realize", "start"]

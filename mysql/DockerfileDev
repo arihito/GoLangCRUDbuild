@@ -1,0 +1,17 @@
+FROM mysql:8.0.15
+
+ENV LOG_PATH=/var/log/mysql
+RUN mkdir -p ${LOG_PATH} && touch ${LOG_PATH}/mysqld.log
+
+# char-set and collation: 
+#   char-set: 
+#     server:  utf8mb4
+#     client:  utf8mb4
+#   collation: utf8mb4
+RUN { \
+    echo '[mysqld]'; \
+    echo 'character-set-server=utf8mb4'; \
+    echo 'collation-server=utf8mb4_general_ci'; \
+    echo '[client]'; \
+    echo 'default-character-set=utf8mb4'; \
+} > /etc/mysql/conf.d/charset.cnf

@@ -1,0 +1,67 @@
+version: '3.7'
+services:
+  db:
+    container_name: sample_mysql_db
+    build:
+      context: ./mysql
+      dockerfile: DockerfileDev
+    image: mysql:8.0.15
+    restart: always
+    environment:
+      MYSQL_DATABASE: sample_db
+      MYSQL_USER: sample_user
+      MYSQL_PASSWORD: 12345
+      MYSQL_ROOT_PASSWORD: root12345
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - ./log/mysql:/var/log/mysql
+      - ./mysql/data:/var/lib/mysql
+    networks:
+      - bridge
+  api:
+    container_name: sample_api
+    build:
+      context: go
+      dockerfile: DockerfileDev
+    working_dir: "/go/src/github.com/sminoeee/sample-app/go/"
+    restart: always
+    depends_on:
+      - db
+    entrypoint: ./wait-for-dependencies.sh
+    ports:
+      - "1323:1323"
+    environment:
+      APP_ENV: local
+      MYSQL_DB_HOST: db
+      MYSQL_DB: sample_db
+      MYSQL_PORT: 3306
+      MYSQL_USER: sample_user
+      MYSQL_PASSWORD: 12345
+    volumes:
+      - $GOPATH/src:/go/src
+      - ./log/go:/var/log/go
+    networks:
+      - bridge
+  web:
+    container_name: sample_web
+    build:
+      context: ./web
+      dockerfile: DockerfileDev
+    tty: true
+    restart: always
+    depends_on:
+      - api
+    volumes:
+      - "./log/web:/var/log/web"
+      - "./web:/app"
+    ports:
+      - "3000:3000"
+    networks:
+      - bridge
+    command: yarn run dev
+networks:
+  bridge:
+    driver: bridge
