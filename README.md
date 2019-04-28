@@ -147,6 +147,35 @@ API サーバーを起動した状態でソースコードを変更して保存�
 [01:41:28][API-SERVER] : ⇨ http server started on [::]:1323   # <- ここまで出たらOK!
 ```
 
-## 作るもの
-- ワイヤーフレーム  
-  https://overflow.io/s/GUGA0B/
+## ワイヤーフレーム. APIを実装していくための画面イメージ    
+https://overflow.io/s/GUGA0B/
+
+
+## ソース構成
+```log
+$ tree
+.
+├── README.md
+├── docker-compose.yml
+├── go                          # <- API server のソースコード
+│   ├── external                # <- DB, Server のセットアップコード
+│   │   ├── db
+│   │   └── echo
+│   ├── adapter                 # <- DB, Server のライブラリ特有のコード(ライブラリの方言が混じるところ)
+│   │   ├── gateway             # <- このサンプルではDBアクセス用のコードのみ配置
+│   │   ├── handler             # <- ルーティングの受け口
+│   │   │   ├── request         # <- リクエストボディ,クエリストリングの構造体. ざっくりリクエスト
+│   │   │   ├── response        # <- レスポンス
+│   │   │   └── user_handler.go
+│   │   └── router              # <- ルーティング
+│   ├── usecase                 # <- アプリケーションルール
+│   ├── domain                  # <- 業務ルール（今回は規模が小さいので ActiveRecord 化してる...）
+│   │   ├── model               # <- 業務ルールがしょぼいので実質 Entity.
+│   │   └── repository          # <- domain と永続化層との interface
+│   ├── main.go                 # <- お馴染みの
+├── mysql                       # <- DB 
+│   └── initdb.d
+│       └── schema.sql          # <- スキーマ. 開発環境ビルド時に作るテーブル類が定義されてる
+├── sample_db_erd.png           # <- ER図（外部キー付き）
+└── web                         # <- ！？（無視でOK）
+```
