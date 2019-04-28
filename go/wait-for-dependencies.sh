@@ -29,4 +29,4 @@ done
 >&2 echo "mysql is up - executing command"
 
 # start...
-bash -c "realize start --name='sample-api' --run"
+bash -c "realize start --name='api-server' --run"

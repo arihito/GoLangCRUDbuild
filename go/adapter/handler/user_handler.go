@@ -5,19 +5,25 @@ import (
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
 	"github.com/sminoeee/sample-app/go/domain/model"
-	"github.com/sminoeee/sample-app/go/usecase/interfaces"
+	"github.com/sminoeee/sample-app/go/external/db"
+	"github.com/sminoeee/sample-app/go/usecase"
+	"github.com/sminoeee/sample-app/go/util"
 	"net/http"
-	"strconv"
 	"time"
 )
 
 type (
-	userHandler struct {
-		useCase interfaces.UserUseCase
+	IUserHandler interface {
+		Get(ctx echo.Context) error
+		Store(ctx echo.Context) error
+	}
+
+	UserHandler struct {
+		uc usecase.IUserUseCase
 	}
 
 	userDetailResponse struct {
-		ID          uint64
+		ID          int64
 		Name        string
 		DisplayName *string
 		CanceledAt  *time.Time
@@ -29,24 +35,21 @@ type (
 	}
 
 	userStoreResponse struct {
-		ID uint64
+		ID int64
 	}
 )
 
-func NewUserHandler(useCase interfaces.UserUseCase) *userHandler {
-	return &userHandler{
-		useCase: useCase,
+func NewUserHandler() IUserHandler {
+	return &UserHandler{
+		uc: usecase.NewUserUseCase(db.Conn),
 	}
 }
 
 // GET /users/:id
-func (handler *userHandler) FindById(ctx echo.Context) error {
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		return NewApplicationError(http.StatusBadRequest, "bad request.")
-	}
+func (h *UserHandler) Get(ctx echo.Context) error {
+	userID := util.GetUserIDFromRequest(ctx)
 
-	user, err := handler.useCase.FindByID(uint64(id))
+	user, err := h.uc.FindByID(userID)
 	if err != nil {
 		log.Error(err)
 		return NewApplicationError(http.StatusInternalServerError, "server error.")
@@ -66,7 +69,7 @@ func (handler *userHandler) FindById(ctx echo.Context) error {
 }
 
 // POST /users
-func (handler *userHandler) Store(ctx echo.Context) error {
+func (h *UserHandler) Store(ctx echo.Context) error {
 	req := userStoreRequest{}
 	if err := ctx.Bind(&req); err != nil {
 		log.Error(err)
@@ -79,7 +82,7 @@ func (handler *userHandler) Store(ctx echo.Context) error {
 		return NewApplicationError(http.StatusBadRequest, "bad request.")
 	}
 
-	id, err := handler.useCase.Store(user);
+	id, err := h.uc.Store(user);
 	if err != nil {
 		log.Error(err)
 		return NewApplicationError(http.StatusInternalServerError, "server error.")

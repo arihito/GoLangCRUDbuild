@@ -1,5 +1,8 @@
 FROM mysql:8.0.15
 
+# mute: "debconf: delaying package configuration, since apt-utils is not installed"
+ENV DEBIAN_FRONTEND noninteractive
+
 ENV LOG_PATH=/var/log/mysql
 RUN mkdir -p ${LOG_PATH} && touch ${LOG_PATH}/mysqld.log
 

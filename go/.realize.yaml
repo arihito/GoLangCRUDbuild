@@ -3,7 +3,8 @@ settings:
     force: false
     interval: 0s
 schema:
-  - name: sample-api
+  - name: api-server
+    # path で main.go を拾えていない説？
     path: .
     commands:
       run:
