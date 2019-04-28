@@ -24,6 +24,7 @@ func NewDashboardHandler() IDashboardHandler {
 	}
 }
 
+// ダッシュボードに表示する内容を取得する
 func (h *DashboardHandler) Get(c echo.Context) error {
 	// request からユーザーIDを取得する
 	userID := util.GetUserIDFromRequest(c)

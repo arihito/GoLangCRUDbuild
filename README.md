@@ -93,11 +93,6 @@ sample_api | [06:58:09][SAMPLE-API] : GO changed /go/src/github.com/sminoeee/sam
 sample_api | [06:58:09][SAMPLE-API] : Install started  # <- リスタート完了
 ```
 
-
-## サーバーを停止する
-
-
-
 ## 作るもの
 - ワイヤーフレーム  
-  https://overflow.io/s/23OI3A/
+  https://overflow.io/s/GUGA0B/
