@@ -23,6 +23,7 @@ func Init() {
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
+	// Sample-app のデフォルトユーザーを設定するミドル
 	e.Use(middleware2.SetDefaultUser)
 
 	// routing

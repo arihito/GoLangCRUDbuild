@@ -18,6 +18,7 @@ func Router(e *echo.Echo) *echo.Echo {
 	// users
 	userHandler := handler.NewUserHandler()
 	g.GET("/users/:id", userHandler.Get)
+	g.GET("/users/:id/study_groups", userHandler.GetStudyGroups)
 	g.POST("/users", userHandler.Store)
 
 	// dashboard
@@ -25,8 +26,16 @@ func Router(e *echo.Echo) *echo.Echo {
 	g.GET("/dashboard", dashboardHandler.Get)
 
 	// study_groups
+	studyGroupHandler := handler.NewStudyGroupHandler()
+	g.POST("/study_groups", studyGroupHandler.Create)       // グループ作成
+	g.GET("/study_groups/:id", studyGroupHandler.Get)       // グループ詳細取得
+	g.PUT("/study_groups/:id", studyGroupHandler.Update)    // グループ更新
+	g.DELETE("/study_groups/:id", studyGroupHandler.Delete) // グループ削除
 
-	// TODO 実装
+	// TODO 実装 ...
+
+	// CRUD events
+	//
 
 	return e
 }

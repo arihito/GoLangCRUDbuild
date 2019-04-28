@@ -3,21 +3,28 @@
 ## セットアップ
 
 GO をインストールする  
-`TODO`
+windows, mac と環境ごとに異なるため [golang install] みたいな感じでググってインストールする  
+mac は homebrew を使うと楽  
+
+```bash
+$ brew install go
+```
 
 GOPATH を確認する  
+GOPATH は Go の作業ディレクトリ的なやつ。Ver 1.11 まではこのパスの配下にソースを配置する  
+
 ```bash
 $ go env | grep GOPATH
 GOPATH="/Users/hoge/go"  # <- 環境変数に GOPATH が設定されていること
 ```
 
-GOPATH 配下にソースを配置する
+GOPATH 配下にソースコード一式を配置する. Go の標準パス構成に従って配置してください.
 ```bash
 $ echo $GOPATH
-/Users/hoge/go
+/Users/hoge/go  # <- 環境変数 GOPATH が設定されていること. 以降 /Users/hoge/go は GOPATH と表記します
 
 $ pwd
-/Users/hoge/go/src/github.com/sminoeee/sample-app  # <- こんな感じ. /Users/hoge/go/src 以降は Go の標準に従ったパス構成です
+GOPATH/src/github.com/sminoeee/sample-app  # <- こんな感じ. GOPATH/src 以降は Go の標準に従ったパス構成です
 ```
 
 開発環境のビルド
@@ -36,7 +43,7 @@ Successfully tagged sample-app_web:latest
 API サーバーを起動する
 ```bash
 $ pwd 
-GOPATH/src/github.com/sminoeee/sample-app
+GOPATH/src/github.com/sminoeee/sample-app  # <- パスを確認
 
 $ docker-compose up --force-recreate
 ...
@@ -55,30 +62,16 @@ sample_api | [06:52:35][SAMPLE-API] : http server started on [::]:1323
 # ↑のように表示されたらOK. このログは API server (Echo) の起動ログ
 ```
 
-## 開発してみる
-
-API サーバーを起動した状態でソースコードを変更して保存すると自動ビルドが走ります
-
+API サーバーの起動確認: health check を叩いてみる
 ```log
-sample_api | [06:58:09][SAMPLE-API] : GO changed /go/src/github.com/sminoeee/sample-app/go/usecase/seminar_usecase.go  # <- ビルド開始
-sample_api | [06:58:09][SAMPLE-API] : Install started  # <- リスタート完了
-```
-
-## API を叩いてみる
-```log
-$ curl -X GET \
-    http://localhost:1323/api/healthcheck \
-    -H 'Postman-Token: 652ccaa2-239c-432c-bbd7-5e4dd81d2515' \
-    -H 'cache-control: no-cache'
-
+$ curl -X GET http://localhost:1323/api/healthcheck
 OK  # <- ヘルスチェックが通ること
 ```
 
-## サーバーを停止する
+API サーバーを停止する
 ```bash
 # Ctrl+C で停止する
 # 停止に成功したケース
-Stopping sample_web      ... done
 Stopping sample_api      ... done
 Stopping sample_mysql_db ... done
 
@@ -89,6 +82,22 @@ Stopping sample_mysql_db ... done
 $ docker-compose down
 ```
 
-## Tips
-- ざっくり GOPATH って何？  
- Go の作業ディレクトリ的なやつ。Ver 1.11 まではこのパスの配下にソースを配置する
+## 開発してみる
+
+`TODO:: realize`
+
+API サーバーを起動した状態でソースコードを変更して保存すると自動ビルドが走ります  
+
+```log
+sample_api | [06:58:09][SAMPLE-API] : GO changed /go/src/github.com/sminoeee/sample-app/go/usecase/seminar_usecase.go  # <- ビルド開始
+sample_api | [06:58:09][SAMPLE-API] : Install started  # <- リスタート完了
+```
+
+
+## サーバーを停止する
+
+
+
+## 作るもの
+- ワイヤーフレーム  
+  https://overflow.io/s/23OI3A/

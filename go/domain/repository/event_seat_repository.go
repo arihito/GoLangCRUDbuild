@@ -1,5 +1,5 @@
 package repository
 
-type EventSeatRepository interface {
+type IEventSeatRepository interface {
 	// TODO 実装
 }

@@ -9,7 +9,7 @@ type tagRepository struct {
 	db *gorm.DB
 }
 
-func NewTagRepository(db *gorm.DB) repository.TagRepository {
+func NewTagRepository(db *gorm.DB) repository.ITagRepository {
 	return &tagRepository{
 		db: db,
 	}

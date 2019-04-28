@@ -4,7 +4,9 @@ import "time"
 
 type StudyGroup struct {
 	ID        int64
-	Name      string
+	Title     string
+	SubTitle  string
+	ImagePath string
 	PageUrl   string
 	UserID    int64
 	Published bool

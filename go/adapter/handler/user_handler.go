@@ -4,22 +4,26 @@ import (
 	goModel "github.com/jeevatkm/go-model"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
+	"github.com/sminoeee/sample-app/go/adapter/handler/response"
 	"github.com/sminoeee/sample-app/go/domain/model"
 	"github.com/sminoeee/sample-app/go/external/db"
 	"github.com/sminoeee/sample-app/go/usecase"
 	"github.com/sminoeee/sample-app/go/util"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 type (
 	IUserHandler interface {
 		Get(ctx echo.Context) error
+		GetStudyGroups(ctx echo.Context) error
 		Store(ctx echo.Context) error
 	}
 
 	UserHandler struct {
-		uc usecase.IUserUseCase
+		UserUseCase       usecase.IUserUseCase
+		StudyGroupUseCase usecase.IStudyGroupUseCase
 	}
 
 	userDetailResponse struct {
@@ -41,7 +45,8 @@ type (
 
 func NewUserHandler() IUserHandler {
 	return &UserHandler{
-		uc: usecase.NewUserUseCase(db.Conn),
+		UserUseCase:       usecase.NewUserUseCase(db.Conn),
+		StudyGroupUseCase: usecase.NewStudyGroupUseCase(),
 	}
 }
 
@@ -49,7 +54,7 @@ func NewUserHandler() IUserHandler {
 func (h *UserHandler) Get(ctx echo.Context) error {
 	userID := util.GetUserIDFromRequest(ctx)
 
-	user, err := h.uc.FindByID(userID)
+	user, err := h.UserUseCase.FindByID(userID)
 	if err != nil {
 		log.Error(err)
 		return NewApplicationError(http.StatusInternalServerError, "server error.")
@@ -68,6 +73,21 @@ func (h *UserHandler) Get(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, res)
 }
 
+// GET /users/:id/study_groups
+func (h *UserHandler) GetStudyGroups(ctx echo.Context) error {
+	userID, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return NewApplicationError(http.StatusBadRequest, "bad request.")
+	}
+
+	groups, err := h.StudyGroupUseCase.FindByUserID(int64(userID))
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(http.StatusOK, response.NewStudyGroupResponses(groups))
+}
+
 // POST /users
 func (h *UserHandler) Store(ctx echo.Context) error {
 	req := userStoreRequest{}
@@ -82,7 +102,7 @@ func (h *UserHandler) Store(ctx echo.Context) error {
 		return NewApplicationError(http.StatusBadRequest, "bad request.")
 	}
 
-	id, err := h.uc.Store(user);
+	id, err := h.UserUseCase.Store(user);
 	if err != nil {
 		log.Error(err)
 		return NewApplicationError(http.StatusInternalServerError, "server error.")

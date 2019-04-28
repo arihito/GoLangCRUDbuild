@@ -1,5 +1,7 @@
 package repository
 
-type StudyGroupMemberRepository interface {
-	// TODO 実装
+import "github.com/sminoeee/sample-app/go/domain/model"
+
+type IStudyGroupMemberRepository interface {
+	FindByUserID(userID int64) ([]model.StudyGroupMember, error)
 }

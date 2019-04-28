@@ -1,5 +1,5 @@
 package repository
 
-type EventTagRepository interface {
+type IEventTagRepository interface {
 	// TODO 実装
 }

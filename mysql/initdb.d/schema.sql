@@ -19,14 +19,16 @@ DROP TABLE IF EXISTS study_groups;
 CREATE TABLE study_groups
 (
     id         SERIAL PRIMARY KEY,
-    name       VARCHAR(2000)   NOT NULL comment 'グループ名',
+    title      VARCHAR(256)    NOT NULL comment 'タイトル',
+    sub_title  VARCHAR(256) DEFAULT NULL comment 'サブタイトル',
+    image_path VARCHAR(2000)   NOT NULL comment 'トップ画像の保存パス',
     page_url   VARCHAR(2000)   NOT NULL comment 'グループページURL',
     user_id    BIGINT UNSIGNED NOT NULL comment '主催者',
-    published  BOOLEAN  DEFAULT FALSE comment '公開済みかどうか',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    published  BOOLEAN      DEFAULT FALSE comment '公開済みかどうか',
+    created_at DATETIME     DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    # ,FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 /* study_group_members: グループメンバー */
@@ -41,9 +43,9 @@ CREATE TABLE study_group_members
     updated_at     DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     UNIQUE KEY (study_group_id, user_id),
-    INDEX user_id (user_id),
-    FOREIGN KEY (study_group_id) REFERENCES study_groups (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    INDEX user_id (user_id)
+    # , FOREIGN KEY (study_group_id) REFERENCES study_groups (id)
+    # , FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
 /*  events: イベント */
@@ -53,7 +55,7 @@ CREATE TABLE events
     id             SERIAL PRIMARY KEY,
     title          VARCHAR(256)    NOT NULL comment 'タイトル',
     sub_title      VARCHAR(256) DEFAULT NULL comment 'サブタイトル',
-    image_path     VARCHAR(256) DEFAULT NULL comment '画像パス',
+    image_path     VARCHAR(256) DEFAULT NULL comment 'トップ画像の保存パス',
     study_group_id BIGINT UNSIGNED NOT NULL comment '所属グループ',
     event_start    DATETIME        NOT NULL comment '開催開始',
     event_end      DATETIME        NOT NULL comment '開催終了',
@@ -63,10 +65,10 @@ CREATE TABLE events
     user_id        BIGINT UNSIGNED NOT NULL comment '主催者',
     published      BOOLEAN      DEFAULT FALSE comment '公開済みかどうか',
     created_at     DATETIME     DEFAULT CURRENT_TIMESTAMP,
-    updated_at     DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_at     DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (study_group_id) REFERENCES study_groups (id)
+    # , FOREIGN KEY (user_id) REFERENCES users (id)
+    # , FOREIGN KEY (study_group_id) REFERENCES study_groups (id)
 );
 
 /*  tags: タグ */
@@ -91,9 +93,9 @@ CREATE TABLE event_tags
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    UNIQUE KEY (event_id, tag_id),
-    FOREIGN KEY (event_id) REFERENCES events (id),
-    FOREIGN KEY (tag_id) REFERENCES tags (id)
+    UNIQUE KEY (event_id, tag_id)
+    # , FOREIGN KEY (event_id) REFERENCES events (id)
+    # , FOREIGN KEY (tag_id) REFERENCES tags (id)
 );
 
 /*  event_seats: イベント参加枠 */
@@ -110,8 +112,8 @@ CREATE TABLE event_seats
     created_at      DATETIME          DEFAULT CURRENT_TIMESTAMP,
     updated_at      DATETIME          DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    UNIQUE KEY (event_id, title),
-    FOREIGN KEY (event_id) REFERENCES events (id)
+    UNIQUE KEY (event_id, title)
+    # , FOREIGN KEY (event_id) REFERENCES events (id)
 );
 
 /* event_reserves: イベント予約 */
@@ -125,8 +127,8 @@ CREATE TABLE event_reserves
     created_at    DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at    DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    UNIQUE KEY (user_id, evnet_id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (evnet_id) REFERENCES events (id),
-    FOREIGN KEY (event_seat_id) REFERENCES event_seats (id)
+    UNIQUE KEY (user_id, evnet_id)
+    # , FOREIGN KEY (user_id) REFERENCES users (id)
+    # , FOREIGN KEY (evnet_id) REFERENCES events (id)
+    # , FOREIGN KEY (event_seat_id) REFERENCES event_seats (id)
 );

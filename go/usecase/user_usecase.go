@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/labstack/gommon/log"
 	"github.com/sminoeee/sample-app/go/adapter/gateway"
 	"github.com/sminoeee/sample-app/go/domain/model"
 	"github.com/sminoeee/sample-app/go/domain/repository"
@@ -15,20 +14,19 @@ type (
 	}
 
 	UserUseCase struct {
-		repository.UserRepository
+		repository.IUserRepository
 	}
 )
 
 func NewUserUseCase(db *gorm.DB) IUserUseCase {
 	return &UserUseCase{
-		UserRepository: gateway.NewUserRepository(db),
+		IUserRepository: gateway.NewUserRepository(db),
 	}
 }
 
 func (uc *UserUseCase) FindByID(id int64) (*model.User, error) {
-	if seminar, err := uc.UserRepository.FindByID(id); err != nil {
-		log.Error(err)
-		return nil, ErrFailedDbAccess
+	if seminar, err := uc.IUserRepository.FindByID(id); err != nil {
+		return nil, err
 	} else {
 		return seminar, nil
 	}
@@ -36,9 +34,8 @@ func (uc *UserUseCase) FindByID(id int64) (*model.User, error) {
 
 func (uc *UserUseCase) Store(user model.User) (*int64, error) {
 	// TODO バリデーション ...
-	if id, err := uc.UserRepository.Store(user); err != nil {
-		log.Error(err)
-		return nil, ErrFailedDbAccess
+	if id, err := uc.IUserRepository.Store(user); err != nil {
+		return nil, err
 	} else {
 		return id, nil
 	}

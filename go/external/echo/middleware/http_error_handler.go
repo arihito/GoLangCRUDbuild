@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"github.com/labstack/echo"
-	"github.com/labstack/gommon/log"
 	"github.com/sminoeee/sample-app/go/adapter/handler"
 	"net/http"
 	"time"
@@ -25,7 +24,6 @@ func CustomHTTPErrorHandler(err error, c echo.Context) {
 		message = e.Message
 	default:
 		// unknown error
-		log.Error(err)
 		if he, ok := err.(*echo.HTTPError); ok {
 			code = he.Code
 			message = http.StatusText(he.Code)

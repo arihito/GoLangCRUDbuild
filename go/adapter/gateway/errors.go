@@ -1,8 +1,6 @@
 package gateway
 
-import (
-	"errors"
-)
+import "errors"
 
 var (
 	ErrDBAccessError = errors.New("db access error.")

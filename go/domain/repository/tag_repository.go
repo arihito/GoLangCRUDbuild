@@ -1,5 +1,5 @@
 package repository
 
-type TagRepository interface {
+type ITagRepository interface {
 	// TODO 実装
 }
