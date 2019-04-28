@@ -6,19 +6,20 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/gommon/log"
 	"github.com/sminoeee/sample-app/go/domain/model"
+	"github.com/sminoeee/sample-app/go/domain/repository"
 )
 
 type userRepository struct {
 	db *gorm.DB
 }
 
-func NewUserRepository(db *gorm.DB) *userRepository {
+func NewUserRepository(db *gorm.DB) repository.UserRepository {
 	return &userRepository{
 		db: db,
 	}
 }
 
-func (r *userRepository) FindByID(id uint64) (*model.User, error) {
+func (r *userRepository) FindByID(id int64) (*model.User, error) {
 	user := model.User{}
 	if err := r.db.First(&user, id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -30,7 +31,7 @@ func (r *userRepository) FindByID(id uint64) (*model.User, error) {
 	return &user, nil
 }
 
-func (r *userRepository) Store(user model.User) (*uint64, error) {
+func (r *userRepository) Store(user model.User) (*int64, error) {
 	if err := r.db.Create(&user).Error; err != nil {
 		return nil, err
 	}

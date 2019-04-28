@@ -5,8 +5,13 @@ import (
 )
 
 type User struct {
-	ID          uint64
+	ID          int64
 	Name        string
 	DisplayName *string
-	CanceledAt  *time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+}
+
+func (m *User) TableName() string {
+	return "users"
 }

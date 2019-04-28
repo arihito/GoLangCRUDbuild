@@ -3,6 +3,7 @@ package echo
 import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/sminoeee/sample-app/go/adapter/router"
 	middleware2 "github.com/sminoeee/sample-app/go/external/echo/middleware"
 	"os"
 )
@@ -22,9 +23,10 @@ func Init() {
 		AllowOrigins: []string{"*"},
 		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
+	e.Use(middleware2.SetDefaultUser)
 
 	// routing
-	e = router(e)
+	e = router.Router(e)
 
 	// http error handler
 	e.HTTPErrorHandler = middleware2.CustomHTTPErrorHandler
