@@ -6,3 +6,6 @@ go/vendor
 
 # data
 mysql/data
+
+# log
+log
