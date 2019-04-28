@@ -40,6 +40,7 @@ services:
       MYSQL_PORT: 3306
       MYSQL_USER: sample_user
       MYSQL_PASSWORD: 12345
+      IS_ON_DOCKER: 'true'
     volumes:
       - $GOPATH/src:/go/src
       - ./log/go:/var/log/go
