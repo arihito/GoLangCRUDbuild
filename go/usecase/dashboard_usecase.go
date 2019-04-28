@@ -22,6 +22,7 @@ type (
 func NewDashboardUseCase() IDashboardUseCase {
 	return &DashboardUseCase{
 		EventReserveRepository: gateway.NewEventReserveRepository(db.Conn),
+		EventRepository:        gateway.NewEventRepository(db.Conn),
 	}
 }
 

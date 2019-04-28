@@ -9,7 +9,7 @@ type eventSeatRepository struct {
 	db *gorm.DB
 }
 
-func NewEventSeatRepository(db *gorm.DB) repository.EventSeatRepository {
+func NewEventSeatRepository(db *gorm.DB) repository.IEventSeatRepository {
 	return &eventSeatRepository{
 		db: db,
 	}

@@ -9,7 +9,7 @@ type eventTagRepository struct {
 	db *gorm.DB
 }
 
-func NewEventTagRepository(db *gorm.DB) repository.EventTagRepository {
+func NewEventTagRepository(db *gorm.DB) repository.IEventTagRepository {
 	return &eventTagRepository{
 		db: db,
 	}
